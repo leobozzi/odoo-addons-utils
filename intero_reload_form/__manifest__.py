@@ -42,4 +42,5 @@
     'images':['static/description/store_img_cover.png'],
     'website': 'https://www.intero-technologies.de',
     'Read description for':[]
+
 }
