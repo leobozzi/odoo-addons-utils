@@ -31,7 +31,7 @@
     'website': 'https://www.cybrosys.com',
     'depends': [
         'base',
-        ],
+    ],
     'data': [
         'views/view.xml',
         'wizard/wizard.xml',
