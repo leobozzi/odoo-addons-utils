@@ -1,4 +1,3 @@
-""""CRM Dashboard"""
 # -*- coding: utf-8 -*-
 #############################################################################
 #
@@ -121,7 +120,7 @@ class CRMLead(models.Model):
         """Sales Activity Pie"""
         self._cr.execute('''select mail_activity_type.name,COUNT(*) from mail_activity
         inner join mail_activity_type on mail_activity.activity_type_id = mail_activity_type.id
-        where mail_activity.res_model = 'crm.lead' GROUP BY mail_activity_type.name''')
+        where res_model = 'crm.lead' GROUP BY mail_activity_type.name''')
         data = self._cr.dictfetchall()
 
         name = []
@@ -373,7 +372,7 @@ class CRMLead(models.Model):
         self.achievement_amount = achievement
 
         percent = 0
-        if achievement != 0:
+        if total != 0:
             percent = (achievement * 100 / total) / 100
 
         goals.append(achievement)
@@ -491,23 +490,23 @@ class CRMLead(models.Model):
 
         return test
 
-    # @api.model
-    # def get_lost_reason_count(self):
-    #     """Top 5 Lost Reason and Count"""
-    #     self._cr.execute('''select lost_reason_id,count(lost_reason_id) as counts
-    #     from crm_lead where probability=0 and active=false and lost_reason_id is not null
-    #     group by lost_reason_id order by counts desc limit 5''')
-    #     data1 = self._cr.fetchall()
-    #
-    #     reason_count = []
-    #     for rec in data1:
-    #         reason_id = rec[0]
-    #         reason_id_obj = self.env['crm.lost.reason'].browse(reason_id)
-    #         rec_list = list(rec)
-    #         rec_list[0] = reason_id_obj.name
-    #         reason_count.append(rec_list)
-    #
-    #     return {'reason_count': reason_count}
+    @api.model
+    def get_lost_reason_count(self):
+        """Top 5 Lost Reason and Count"""
+        self._cr.execute('''select lost_reason,count(lost_reason) as counts
+        from crm_lead where probability=0 and active=false and lost_reason is not null
+        group by lost_reason order by counts desc limit 5''')
+        data1 = self._cr.fetchall()
+
+        reason_count = []
+        for rec in data1:
+            reason_id = rec[0]
+            reason_id_obj = self.env['crm.lost.reason'].browse(reason_id)
+            rec_list = list(rec)
+            rec_list[0] = reason_id_obj.name
+            reason_count.append(rec_list)
+
+        return {'reason_count': reason_count}
 
     @api.model
     def get_ratio_based_country(self):
@@ -839,7 +838,7 @@ class CRMLead(models.Model):
         if revenue_value == 0:
             ratio_value = 0
         if revenue_value > 0:
-            self._cr.execute('''select case when b.count_two = 0 then 0 else (
+            self._cr.execute('''select case when a.count_one+b.count_two = 0 then 0 else (
             CAST(a.count_one as float) / CAST(b.count_two as float))end as final_count
             from (select COUNT(id) as count_one from crm_lead WHERE
             crm_lead.user_id = '%s' AND crm_lead.active = True AND crm_lead.probability = 100
@@ -954,7 +953,7 @@ class CRMLead(models.Model):
         if revenue_value == 0:
             ratio_value = 0
         if revenue_value > 0:
-            self._cr.execute('''select case when b.count_two = 0 then 0 else (
+            self._cr.execute('''select case when a.count_one + b.count_two = 0 then 0 else (
             CAST(a.count_one as float) / CAST(b.count_two as float))end as final_count from (
             select COUNT(id) as count_one from crm_lead WHERE crm_lead.user_id = '%s' AND
             crm_lead.active = True AND crm_lead.probability = 100 AND Extract(Year FROM
@@ -1068,7 +1067,7 @@ class CRMLead(models.Model):
         if revenue_value == 0:
             ratio_value = 0
         if revenue_value > 0:
-            self._cr.execute('''select case when b.count_two = 0 then 0 else (
+            self._cr.execute('''select case when a.count_one+b.count_two = 0 then 0 else (
             CAST(a.count_one as float) / CAST(b.count_two as float))end as final_count
             from (select COUNT(id) as count_one from crm_lead 
             WHERE crm_lead.user_id = '%s' AND crm_lead.active = True AND 
@@ -1187,7 +1186,7 @@ class CRMLead(models.Model):
         if revenue_value == 0:
             ratio_value = 0
         if revenue_value > 0:
-            self._cr.execute('''select case when b.count_two = 0 then 0 else (
+            self._cr.execute('''select case when a.count_one+b.count_two = 0 then 0 else (
             CAST(a.count_one as float) / CAST(b.count_two as float))end as final_count
             from (select COUNT(id) as count_one from crm_lead
             WHERE crm_lead.user_id = '%s' AND crm_lead.active = True AND
@@ -1307,7 +1306,7 @@ class CRMLead(models.Model):
         if revenue_value == 0:
             ratio_value = 0
         if revenue_value > 0:
-            self._cr.execute('''select case when b.count_two = 0 then 0 else (
+            self._cr.execute('''select case when a.count_one+b.count_two = 0 then 0 else (
             CAST(a.count_one as float) / CAST(b.count_two as float))end as final_count
             from (select COUNT(id) as count_one from crm_lead
             WHERE crm_lead.user_id = '%s' AND crm_lead.active = True AND

@@ -44,7 +44,6 @@ class AccountMove(models.Model):
         return super(AccountMove, self).button_cancel()
 
     def post(self):
-
         self.mapped('asset_depreciation_ids').post_lines_and_close_asset()
         return super(AccountMove, self).post()
 
@@ -66,7 +65,6 @@ class AccountMove(models.Model):
 
     def action_post(self):
         result = super(AccountMove, self).action_post()
-
         for inv in self:
             context = dict(self.env.context)
             # Within the context of an invoice,

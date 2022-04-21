@@ -289,7 +289,7 @@ class CommissionReportWizard(models.TransientModel):
             sheet.write('D4', 'Total Revenue', heading)
             sheet.write('E4', 'Commission Amount', heading)
 
-            for j in user_commission_salesperson:
+            for j in user_commission_name:
                 sheet.write(row, col + 0, index, format2)
                 sheet.write(row, col + 1, j, format1)
                 row += 1
@@ -297,7 +297,7 @@ class CommissionReportWizard(models.TransientModel):
 
             row = 5
             col = 0
-            for j in user_commission_name:
+            for j in user_commission_salesperson:
                 sheet.write(row, col + 2, j, format1)
                 row += 1
 

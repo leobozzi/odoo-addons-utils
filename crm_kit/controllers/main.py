@@ -3,8 +3,8 @@
 #
 #    Cybrosys Technologies Pvt. Ltd.
 #
-#    Copyright (C) 2020-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
-#    Author: Midilaj (<https://www.cybrosys.com>)
+#    Copyright (C) 2021-TODAY Cybrosys Technologies(<https://www.cybrosys.com>)
+#    Author: Cybrosys Techno Solutions(<https://www.cybrosys.com>)
 #
 #    You can modify it under the terms of the GNU LESSER
 #    GENERAL PUBLIC LICENSE (LGPL v3), Version 3.
@@ -19,7 +19,6 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 #############################################################################
-
 import json
 from odoo import http
 from odoo.http import content_disposition, request
@@ -28,24 +27,25 @@ from odoo.tools import html_escape
 
 
 class XLSXReportController(http.Controller):
+    """XLSX Report Controller"""
 
-    @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'], csrf=False)
-    def get_report_xlsx(self, model, options, output_format, report_name, **kw):
+    @http.route('/xlsx_reports', type='http', auth='user', methods=['POST'],
+                csrf=False)
+    def get_report_xlsx(self, model, options, output_format, token, report_name,
+                        **kw):
+        """Function for report printing"""
         uid = request.session.uid
         report_obj = request.env[model].with_user(uid)
         options = json.loads(options)
-        token = 'dummy-because-api-expects-one'
         try:
             if output_format == 'xlsx':
-                response = request.make_response(
-                    None,
-                    headers=[
-                        ('Content-Type', 'application/vnd.ms-excel'),
-                        ('Content-Disposition', content_disposition(report_name + '.xlsx'))
-                    ]
-                )
+                response = request.make_response(None, headers=[
+                    ('Content-Type', 'application/vnd.ms-excel'),
+                    ('Content-Disposition',
+                     content_disposition(report_name + '.xlsx'))])
                 report_obj.get_xlsx_report(options, response)
             response.set_cookie('fileToken', token)
+
             return response
         except Exception as e:
             se = _serialize_exception(e)
@@ -54,4 +54,5 @@ class XLSXReportController(http.Controller):
                 'message': 'Odoo Server Error',
                 'data': se
             }
+
             return request.make_response(html_escape(json.dumps(error)))
