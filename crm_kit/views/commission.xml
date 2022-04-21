@@ -95,7 +95,7 @@
     </record>
 
     <record id="action_commission_plan" model="ir.actions.act_window">
-        <field name="name">Crm Commission Plan</field>
+        <field name="name">CRM Commission Plan</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.commission</field>
         <field name="view_mode">tree,form</field>

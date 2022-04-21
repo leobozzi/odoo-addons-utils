@@ -20,11 +20,11 @@
 #
 #############################################################################
 {
-    "name": "Odoo13 CRM Kit",
-    'description': """Complete CRM Kit for odoo13, CRM, CRM dashboard, crm commission, commission plan, crm features""",
-    'summary': """Complete CRM Kit for odoo13""",
+    "name": "Odoo15 CRM Kit",
+    'description': """Complete CRM Kit for odoo15, CRM, CRM dashboard, crm commission, commission plan, crm features""",
+    'summary': """Complete CRM Kit for odoo15""",
     "category": 'Sales',
-    "version": '13.0.1.0.0',
+    "version": '15.0.1.0.0',
     'author': 'Cybrosys Techno Solutions',
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
@@ -34,8 +34,12 @@
         'security/ir.model.access.csv',
         'views/commission.xml',
         'wizard/commission_report.xml',
-        'views/action_manager.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'crm_kit/static/src/js/action_manager.js',
+        ],
+    },
     'images': [
         'static/description/banner.png',
     ],
