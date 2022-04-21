@@ -79,8 +79,8 @@ class DayBookPdfReport(models.AbstractModel):
             raise UserError(
                 _("Form content is missing, this report cannot be printed."))
 
-        self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(
+        model = self.env.context.get('active_model')
+        docs = self.env[model].browse(
             self.env.context.get('active_ids', []))
         form_data = data['form']
         codes = []
@@ -116,7 +116,7 @@ class DayBookPdfReport(models.AbstractModel):
                 })
         return {
             'doc_ids': docids,
-            'doc_model': self.model,
+            'doc_model': model,
             'data': data['form'],
             'docs': docs,
             'time': time,

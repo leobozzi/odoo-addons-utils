@@ -140,9 +140,8 @@ class ReportBankBook(models.AbstractModel):
             raise UserError(
                 _("Form content is missing, this report cannot be printed."))
 
-        self.model = self.env.context.get('active_model')
-        docs = self.env[self.model].browse(
-            self.env.context.get('active_ids', []))
+        model = self.env.context.get('active_model')
+        docs = self.env[model].browse(self.env.context.get('active_ids', []))
         init_balance = data['form'].get('initial_balance', True)
         sortby = data['form'].get('sortby', 'sort_date')
         display_account = 'movement'
@@ -154,15 +153,21 @@ class ReportBankBook(models.AbstractModel):
         account_ids = data['form']['account_ids']
         accounts = self.env['account.account'].search(
             [('id', 'in', account_ids)])
-        accounts_res = self.with_context(
-            data['form'].get('used_context', {}))._get_account_move_entry(
+        if not accounts:
+            journals = self.env['account.journal'].search([('type', '=', 'bank')])
+            accounts = []
+            for journal in journals:
+                accounts.append(journal.company_id.account_journal_payment_credit_account_id.id)
+            accounts = self.env['account.account'].search([('id', 'in', accounts)])
+
+        accounts_res = self.with_context(data['form'].get('used_context', {}))._get_account_move_entry(
             accounts,
             init_balance,
             sortby,
             display_account)
         return {
             'doc_ids': docids,
-            'doc_model': self.model,
+            'doc_model': model,
             'data': data['form'],
             'docs': docs,
             'time': time,

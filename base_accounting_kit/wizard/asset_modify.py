@@ -33,7 +33,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
     if field is not None:
         transfer_field_to_modifiers(field, modifiers)
     transfer_node_to_modifiers(
-        node, modifiers, context=context, in_tree_view=in_tree_view)
+        node, modifiers, context=context)
     transfer_modifiers_to_node(modifiers, node)
 
 
@@ -108,7 +108,7 @@ class AssetModify(models.TransientModel):
         asset.write(asset_vals)
         asset.compute_depreciation_board()
         tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_period', 'method_end'])
-        changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
+        changes, tracking_value_ids = asset._mail_track(tracked_fields, old_values)
         if changes:
             asset.message_post(subject=_('Depreciation board modified'), body=self.name, tracking_value_ids=tracking_value_ids)
         return {'type': 'ir.actions.act_window_close'}
